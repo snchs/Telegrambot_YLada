@@ -8,7 +8,7 @@ from config import TOKEN
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
 )
-
+ANSWER = ""
 logger = logging.getLogger(__name__)
 
 
@@ -17,17 +17,15 @@ def start(update: Update, context: CallbackContext) -> None:
 
 
 def help_command(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text('Help!')
+    update.message.reply_text('Привет! Напиши /start, чтобы начать работу')
 
 
 def send_photo(update: Update, context: CallbackContext) -> None:
     import bullshit
-    from PIL import Image
     bytestring = bullshit.photo()
     with open('imgs/task.png', 'wb') as imagefile:
         imagefile.write(bytestring)
-    image = Image.open('imgs/task.png')
-    update.message.reply_photo(image)
+    update.message.reply_photo(bytestring)
 
 
 def main() -> None:

@@ -37,12 +37,50 @@ def getTaskByNum(num):
     soup = BeautifulSoup(p.text, 'html.parser')
     center = soup.find('div', class_='center')
     tasksCount = int(str(center.findAll('p')[1])[20:22])
-    print(tasksCount)
     tasks_table = center.find('table', class_='vartopic')
     tasks = tasks_table.findAll('tr')[::2]
     answers = tasks_table.findAll('tr')[1::2]
-    print(tasks)
-    print(answers)
+    img_adresses = []
+    for i in range(len(tasks)):
+        tasks[i] = tasks[i].find('td', class_='topicview')
+    for i in range(len(tasks)):
+        tasks[i] = tasks[i].find('script')
+    for i in range(len(tasks)):
+        txt = str(tasks[i])
+        if 'img' in txt:
+            ind = txt.find('img') + 9
+            ind1 = 0
+            for j in range(ind, len(txt)):
+                if txt[j] == '"':
+                    ind1 = j
+                    break
+            img_adresses.append(txt[ind:ind1])
+        else:
+            img_adresses.append(None)
+        tasks[i] = []
+        id1 = txt.rfind("'")
+        cnt = 0
+        id = 0
+        for j in range(len(txt)):
+            if txt[j] == "'":
+                cnt += 1
+            if cnt == 3:
+                id = j
+                break
+        tasks[i].append(txt[id:id1])
+
+    for i in range(len(answers)):
+        answers[i] = answers[i].find('td', class_='answer')
+    for i in range(len(answers)):
+        answers[i] = answers[i].find('script')
+    for i in range(len(answers)):
+        txt = str(answers[i])
+        answers[i] = []
+        id = txt.find("changeImageFilePath") + 21
+        id1 = txt.rfind("'")
+        answers[i].append(txt[id:id1])
+    num = random.randint(tasksCount)
+    return tasks[num], answers[num], img_adresses[num]
 
 
 num = input()
