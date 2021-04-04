@@ -15,9 +15,10 @@ logger = logging.getLogger(__name__)
 
 
 def start(update: Update, context: CallbackContext):
-    update.message.reply_text('Привет, я бот Информатишка. Я помогу тебе в сдаче ЕГЭ по информатике.\
-Выбери номер задания, я выдам тебе задачу. Введи ответ и я проверю его правильность.\
-Введите команду /practice, чтобы начать решать задания.')
+    update.message.reply_text('Привет, я бот Информатишка. Я помогу тебе в сдаче ЕГЭ по информатике. \
+Выбери номер задания, я выдам тебе задачу. Введи ответ и я проверю его правильность. \
+Введите команду /practice, чтобы начать решать задания. \
+Чтобы смотреть теорию, напишите /theory')
 
 
 def conv_begin(update: Update, context: CallbackContext):
@@ -89,12 +90,9 @@ def theory(update, context):
 'https://code-enjoy.ru/ege_po_informatike_2021_zadanie_25_obrabotka_celochislennoy_informacii/',
 'https://code-enjoy.ru/ege_po_informatike_2021_zadanie_26_sortirovka/',
 'https://code-enjoy.ru/ege_po_informatike_2021_zadanie_27_zakluchitelnoye/']
-    try:
-        id = int(update.message.text)
-        update.message.send('По этой теме можешь почитать теорию по ссылке:\
+    id = int(update.message.text)
+    update.message.reply_text('По этой теме можешь почитать теорию по ссылке:\
 {}'.format(themes_list[id - 1]))
-    except Exception:
-        pass
     return ConversationHandler.END
 
 
@@ -106,8 +104,7 @@ def check(update: Update, context: CallbackContext):
     user_answer.lstrip()
     user_answer.rstrip()
     if str(ANSWER) == str(user_answer):
-        update.message.reply_text('Вы аблолютно правы. Ответ: {}. \
-Чтобы решать дальше напшите /practice. Чтобы смотреть теорию, напишите /theory'.format(user_answer))
+        update.message.reply_text('Вы аблолютно правы. Ответ: {}'.format(user_answer))
         return ConversationHandler.END
     else:
         update.message.reply_text('Ваш ответ неверен. Ответ: {}. \
@@ -132,10 +129,11 @@ def main() -> None:
         entry_points=[CommandHandler('practice', conv_begin)],
         states={
             1: [MessageHandler(Filters.text, practice)],
+            2: [MessageHandler(Filters.text, check)],
         },
         fallbacks=[CommandHandler('stop', start)]
     )
-    
+
     Dialog_theory = ConversationHandler(
         entry_points=[CommandHandler('theory', conv_begin)],
         states={
