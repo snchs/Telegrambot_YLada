@@ -81,7 +81,3 @@ def getTaskByNum(num):
         answers[i].append(txt[id:id1])
     num = random.randint(tasksCount)
     return tasks[num], answers[num], img_adresses[num]
-
-
-num = input()
-getTaskByNum(num)
