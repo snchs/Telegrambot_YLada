@@ -35,8 +35,14 @@ def getTaskByNum(num):
     URL = 'https://kpolyakov.spb.ru/school/ege/gen.php?action=viewAllEgeNo&egeId={}&{}'.format(num, cats)
     p = requests.get(URL)
     soup = BeautifulSoup(p.text, 'html.parser')
-
-    print(p.text)
+    center = soup.find('div', class_='center')
+    tasksCount = int(str(center.findAll('p')[1])[20:22])
+    print(tasksCount)
+    tasks_table = center.find('table', class_='vartopic')
+    tasks = tasks_table.findAll('tr')[::2]
+    answers = tasks_table.findAll('tr')[1::2]
+    print(tasks)
+    print(answers)
 
 
 num = input()

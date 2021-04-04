@@ -2,6 +2,7 @@ import logging
 
 from telegram import Update, ForceReply
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
+from config import TOKEN
 
 # Enable logging
 logging.basicConfig(
@@ -19,18 +20,24 @@ def help_command(update: Update, context: CallbackContext) -> None:
     update.message.reply_text('Help!')
 
 
-def echo(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text(update.message.text)
+def send_photo(update: Update, context: CallbackContext) -> None:
+    import bullshit
+    from PIL import Image
+    bytestring = bullshit.photo()
+    with open('imgs/task.png', 'wb') as imagefile:
+        imagefile.write(bytestring)
+    image = Image.open('imgs/task.png')
+    update.message.reply_photo(image)
 
 
 def main() -> None:
-    updater = Updater("TOKEN")
+    updater = Updater(TOKEN)
     dispatcher = updater.dispatcher
 
     dispatcher.add_handler(CommandHandler("start", start))
     dispatcher.add_handler(CommandHandler("help", help_command))
 
-    dispatcher.add_handler(MessageHandler(Filters.text, echo))
+    dispatcher.add_handler(CommandHandler("photo", send_photo))
 
     updater.start_polling()
 
